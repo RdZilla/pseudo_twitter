@@ -35,7 +35,7 @@ class Comment(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, verbose_name="Автор комментария")
     article = models.ForeignKey(Article, on_delete=models.CASCADE, default=None, verbose_name="Запись")
     parent_comment = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
-    count_of_likes = models.IntegerField(default=0)
+    count_of_likes = models.PositiveIntegerField(default=0)
 
     class Meta:
         verbose_name = "Комментарий"
@@ -52,14 +52,14 @@ class LikeOnComment(models.Model):
     CRY = "&#128557;"
     SURPRISE = "&#128562;"
     LAUGH = "&#128514;"
-    HEARTH = "&#129505;"
+    HEART = "&#129505;"
 
     REACTIONS = (
         (LIKE, "like"),
         (CRY, "cry"),
         (SURPRISE, "surprise"),
         (LAUGH, "laugh"),
-        (HEARTH, "hearth"),
+        (HEART, "heart"),
     )
 
     author = models.ForeignKey(Author, on_delete=models.CASCADE)

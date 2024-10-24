@@ -121,6 +121,7 @@ class GetArticleView(generics.RetrieveAPIView):
     summary="Create article"
 )
 class PostArticleView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = ArticleSerializer
 
     def post(self, request, *args, **kwargs):
@@ -224,6 +225,7 @@ class GetCommentView(generics.ListAPIView):
     summary="Create comment on article"
 )
 class PostCommentView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = CommentsSerializer
 
     def post(self, request, *args, **kwargs):
@@ -329,6 +331,7 @@ class GetLikesOnComment(generics.ListAPIView):
     summary="Create like on comment"
 )
 class PostLikeOnComment(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = LikeOnCommentSerializer
 
     def post(self, request, *args, **kwargs):
@@ -402,6 +405,7 @@ class PostLikeOnComment(generics.GenericAPIView):
     summary="Delete like on comment"
 )
 class DeleteLikeOnComment(generics.DestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     model = LikeOnComment
     serializer_class = LikeOnCommentSerializer
 
