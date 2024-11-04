@@ -41,8 +41,7 @@ class GetPostLikeOnComment(generics.ListCreateAPIView):
     @extend_schema(
         examples=[
             OpenApiExample(
-                "Post example",
-                description="Create like on comment",
+                name="Example of a like on comment create request",
                 value={
                     "author_id": 1,
                     "reaction": "&#128077;"
@@ -126,6 +125,15 @@ class RetrieveUpdateDestroyLikeOnCommentView(generics.RetrieveUpdateDestroyAPIVi
         return super().get(request, *args, **kwargs)
 
     @extend_schema(
+        examples=[
+            OpenApiExample(
+                name="Example of a like on comment update request",
+                value={
+                    "author_id": 1,
+                    "reaction": "&#128077;"
+                }
+            ),
+        ],
         responses={
             status.HTTP_200_OK: LikeOnCommentSerializer,
             **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES,
@@ -136,6 +144,26 @@ class RetrieveUpdateDestroyLikeOnCommentView(generics.RetrieveUpdateDestroyAPIVi
     )
     def put(self, request, *args, **kwargs):
         return super().put(request, *args, **kwargs)
+
+    @extend_schema(
+        examples=[
+            OpenApiExample(
+                name="Example of a like on comment partial update request",
+                value={
+                    "reaction": "&#128077;"
+                }
+            ),
+        ],
+        responses={
+            status.HTTP_200_OK: LikeOnCommentSerializer,
+            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES,
+            **SCHEMA_PERMISSION_DENIED
+        },
+        tags=["Likes"],
+        summary="Partial update like on comment"
+    )
+    def patch(self, request, *args, **kwargs):
+        return super().patch(request, *args, **kwargs)
 
     @extend_schema(
         responses={

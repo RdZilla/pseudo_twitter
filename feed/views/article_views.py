@@ -10,7 +10,7 @@ from feed.statuses import SCHEMA_PERMISSION_DENIED, GET_POST_SCHEMA_STATUSES, RE
 from feed.utils import validate_params
 
 
-class GetArticlesView(generics.ListCreateAPIView):
+class GetArticlesView(generics.ListAPIView):
     serializer_class = ArticlesSerializer
 
     def get_queryset(self):
@@ -41,8 +41,8 @@ class PostArticleView(generics.CreateAPIView):
         summary="Create new article",
         examples=[
             OpenApiExample(
-                'Request example',
-                {
+                name='Example of an article create request',
+                value={
                     "title": "My first article",
                     "content": "This is my first article",
                 },
@@ -95,7 +95,7 @@ class RetrieveUpdateDestroyArticleView(generics.RetrieveUpdateDestroyAPIView):
 
     @extend_schema(
         tags=['Articles'],
-        summary="Get article by id",
+        summary="Get article",
         responses={
             status.HTTP_200_OK: ArticleSerializer,
             **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES,
@@ -107,7 +107,18 @@ class RetrieveUpdateDestroyArticleView(generics.RetrieveUpdateDestroyAPIView):
 
     @extend_schema(
         tags=['Articles'],
-        summary="Update article by id",
+        summary="Update article",
+        examples=[
+            OpenApiExample(
+                name='Example of an article update request',
+                value={
+                    "title": "My first article",
+                    "content": "This is my first article",
+                    "author": 1
+                },
+                request_only=True
+            ),
+        ],
         responses={
             status.HTTP_200_OK: ArticleSerializer,
             **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES,
@@ -121,7 +132,33 @@ class RetrieveUpdateDestroyArticleView(generics.RetrieveUpdateDestroyAPIView):
 
     @extend_schema(
         tags=['Articles'],
-        summary="Delete article by id",
+        summary="Partial update article",
+        examples=[
+            OpenApiExample(
+                name='Example of an article partial update request',
+                value={
+                    "title": "My first article",
+                    "content": "This is my first article",
+                    "author": 1
+                },
+                request_only=True
+            ),
+        ],
+        responses={
+            status.HTTP_200_OK: ArticleSerializer,
+            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES,
+            **SCHEMA_PERMISSION_DENIED
+        }
+    )
+    def patch(self, request, *args, **kwargs):
+        author_id = request.data.get("author")
+        if author_id:
+            get_object_or_404(Author, pk=author_id)
+        return super().partial_update(request, *args, **kwargs)
+
+    @extend_schema(
+        tags=['Articles'],
+        summary="Delete article",
         responses={
             **STATUS_204,
             **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES,

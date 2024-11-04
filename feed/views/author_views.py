@@ -1,4 +1,4 @@
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiExample
 from rest_framework import generics, status, permissions
 
 from feed.models import Author
@@ -25,6 +25,15 @@ class GetPostAuthorsView(generics.ListCreateAPIView):
     @extend_schema(
         tags=['Authors'],
         summary="Create new author",
+        examples=[
+            OpenApiExample(
+                name='Example of an author create request',
+                value={
+                    "author_name": "Erich Maria Remarque",
+                },
+                request_only=True
+            ),
+        ],
         responses={
             status.HTTP_201_CREATED: AuthorsSerializer,
             **GET_POST_SCHEMA_STATUSES
@@ -53,6 +62,15 @@ class RetrieveUpdateDestroyAuthorView(generics.RetrieveUpdateDestroyAPIView):
     @extend_schema(
         tags=['Authors'],
         summary="Update author by id",
+        examples=[
+            OpenApiExample(
+                name='Example of an author update request',
+                value={
+                    "author_name": "Erich Maria Remarque",
+                },
+                request_only=True
+            ),
+        ],
         responses={
             status.HTTP_200_OK: AuthorsSerializer,
             **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES
@@ -60,6 +78,26 @@ class RetrieveUpdateDestroyAuthorView(generics.RetrieveUpdateDestroyAPIView):
     )
     def put(self, request, *args, **kwargs):
         return super().put(request, *args, **kwargs)
+
+    @extend_schema(
+        tags=['Authors'],
+        summary="Partial update author by id",
+        examples=[
+            OpenApiExample(
+                name='Example of an author partial update request',
+                value={
+                    "author_name": "Erich Maria Remarque",
+                },
+                request_only=True
+            ),
+        ],
+        responses={
+            status.HTTP_200_OK: AuthorsSerializer,
+            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES
+        }
+    )
+    def patch(self, request, *args, **kwargs):
+        return super().patch(request, *args, **kwargs)
 
     @extend_schema(
         tags=['Authors'],

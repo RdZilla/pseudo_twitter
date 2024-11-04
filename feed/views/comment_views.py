@@ -62,8 +62,7 @@ class GetPostCommentView(generics.ListCreateAPIView):
         tags=["Comments"],
         examples=[
             OpenApiExample(
-                "Post example",
-                description="Create comment on article",
+                name="Example of an comment create request",
                 value={
                     "comment_text": "Some comment text",
                     "author_id": 1,
@@ -129,8 +128,7 @@ class UpdateDestroyCommentView(generics.UpdateAPIView, generics.DestroyAPIView):
         summary="Update comment on the article",
         examples=[
             OpenApiExample(
-                "Put example",
-                description="Update comment on article",
+                name="Example of an comment update request",
                 value={
                     "comment_text": "Some comment text",
                     "count_likes": 0,
@@ -159,6 +157,46 @@ class UpdateDestroyCommentView(generics.UpdateAPIView, generics.DestroyAPIView):
                 return error
 
         return super().update(request, *args, **kwargs)
+
+    @extend_schema(
+        tags=["Comments"],
+        summary="Partial update comment on the article",
+        examples=[
+            OpenApiExample(
+                name="Example of an comment partial update request",
+                value={
+                    "comment_text": "Some comment text",
+                    "count_likes": 0,
+                    "article": 1,
+                    "author": 1,
+                    "parent_comment": None
+                }
+            ),
+        ],
+        responses={
+            status.HTTP_200_OK: CommentsSerializer,
+            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES,
+            **SCHEMA_PERMISSION_DENIED,
+        }
+    )
+    def patch(self, request, *args, **kwargs):
+        author_id = request.data.get("author")
+        if author_id:
+            get_object_or_404(Author, pk=author_id)
+
+        article_id = request.data.get("article")
+        if article_id:
+            get_object_or_404(Article, pk=article_id)
+
+        parent_comment_id = request.data.get("parent_comment")
+
+        if parent_comment_id:
+            parent_comment = get_object_or_404(Comment, pk=parent_comment_id)
+            error = check_parent_comment(article_id, parent_comment)
+            if error:
+                return error
+
+        return super().partial_update(request, *args, **kwargs)
 
     @extend_schema(
         tags=["Comments"],
