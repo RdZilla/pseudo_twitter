@@ -1,17 +1,26 @@
 from django.urls import path
 
-from feed.views import GetArticlesView, GetArticleView, GetAuthorsView, GetCommentView, PostArticleView, \
-    PostCommentView, PostLikeOnComment, GetLikesOnComment, DeleteLikeOnComment
+from .views.author_views import GetPostAuthorsView, RetrieveUpdateDestroyAuthorView
+from .views.article_views import GetArticlesView, PostArticleView, RetrieveUpdateDestroyArticleView
+from .views.comment_views import GetPostCommentView, UpdateDestroyCommentView
+from .views.like_on_comment_views import GetPostLikeOnComment, RetrieveUpdateDestroyLikeOnCommentView
 
 urlpatterns = [
-    path("get_authors", GetAuthorsView.as_view(), name="get_authors"),
-    path("get_articles", GetArticlesView.as_view(), name="get_articles"),
-    path("get_article/<str:pk>", GetArticleView.as_view(), name="get_articles"),
-    path("post_article", PostArticleView.as_view(), name="post_article"),
-    path("get_comments/<str:article_id>", GetCommentView.as_view(), name="get_comments"),
-    path("post_comment", PostCommentView.as_view(), name="post_comment"),
-    path("get_likes_on_comment/<str:comment_id>", GetLikesOnComment.as_view(), name="get_like_on_comment"),
-    path("post_like_on_comment", PostLikeOnComment.as_view(), name="post_like_on_comment"),
-    path("delete_like_on_comment/<str:author_id>/<str:comment_id>", DeleteLikeOnComment.as_view(),
-         name="delete_like_on_comment")
+    # Authors
+    path("author/", GetPostAuthorsView.as_view(), name="list_authors_create_author"),
+    path("author/<str:pk>/", RetrieveUpdateDestroyAuthorView.as_view(), name="retrieve_author"),
+
+    # Articles
+    path("article/", GetArticlesView.as_view(), name="list_articles"),
+    path("author/<str:author_id>/article/", PostArticleView.as_view(), name="create_article"),
+    path("article/<str:pk>/", RetrieveUpdateDestroyArticleView.as_view(), name="retrieve_update_destroy_article"),
+
+    # Comments
+    path("articles/<str:article_id>/comments/", GetPostCommentView.as_view(), name="list_comments"),
+    path("comments/<str:pk>/", UpdateDestroyCommentView.as_view(), name="create_comment"),
+
+    # Likes on Comments
+    path("comment/<str:comment_id>/like/", GetPostLikeOnComment.as_view(), name="list_likes_create_like_on_comment"),
+    path("comment/<str:comment_id>/like/<str:author_id>/", RetrieveUpdateDestroyLikeOnCommentView.as_view(),
+         name="delete_like_on_comment"),
 ]

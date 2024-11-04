@@ -1,6 +1,4 @@
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 
 class Author(models.Model):
@@ -19,7 +17,8 @@ class Article(models.Model):
     title = models.CharField(max_length=100, verbose_name="Заголовок")
     content = models.TextField(verbose_name="Текст записи")
     author = models.ForeignKey(Author, on_delete=models.CASCADE, verbose_name="Автор записи")
-    create_date = models.DateField(auto_now_add=True, verbose_name="Дата создания записи")
+    create_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания записи")
+    update_date = models.DateTimeField(auto_now=True, verbose_name="Дата обновления записи")
 
     class Meta:
         verbose_name = "Запись"
@@ -31,7 +30,8 @@ class Article(models.Model):
 
 class Comment(models.Model):
     comment_text = models.CharField(max_length=200, verbose_name="Текст комментария")
-    create_date = models.DateField(auto_now_add=True, verbose_name="Дата создания")
+    create_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания комментария")
+    update_date = models.DateTimeField(auto_now=True, verbose_name="Дата обновления комментария")
     author = models.ForeignKey(Author, on_delete=models.CASCADE, verbose_name="Автор комментария")
     article = models.ForeignKey(Article, on_delete=models.CASCADE, default=None, verbose_name="Запись")
     parent_comment = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
