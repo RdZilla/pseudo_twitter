@@ -1,6 +1,7 @@
 from drf_spectacular.utils import inline_serializer
 from rest_framework import serializers, status
 
+# schemas permission denied for documentation
 SCHEMA_PERMISSION_DENIED = {
     status.HTTP_401_UNAUTHORIZED: inline_serializer(
         "Unauthorized",
@@ -52,12 +53,12 @@ STATUS_500 = {
     )
 }
 
-GET_POST_SCHEMA_STATUSES = {
+SCHEMA_GET_POST_STATUSES = {
     **STATUS_400,
     **STATUS_500
 }
 
-RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES = {
+SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES = {
     **STATUS_400,
     **STATUS_404,
     **STATUS_500

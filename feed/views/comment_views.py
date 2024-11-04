@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from feed.models import Comment, Author, Article
 from feed.serializers import CommentsSerializer
-from feed.statuses import SCHEMA_PERMISSION_DENIED, RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES, STATUS_204
+from feed.statuses import SCHEMA_PERMISSION_DENIED, SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES, STATUS_204
 from feed.utils import validate_params
 
 
@@ -51,7 +51,7 @@ class GetPostCommentView(generics.ListCreateAPIView):
         summary="Get comments on the article",
         responses={
             status.HTTP_200_OK: CommentsSerializer,
-            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES,
+            **SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES,
             **SCHEMA_PERMISSION_DENIED,
         }
     )
@@ -73,7 +73,7 @@ class GetPostCommentView(generics.ListCreateAPIView):
         summary="Create comment on the article",
         responses={
             status.HTTP_201_CREATED: CommentsSerializer,
-            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES,
+            **SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES,
             **SCHEMA_PERMISSION_DENIED,
         }
     )
@@ -140,7 +140,7 @@ class UpdateDestroyCommentView(generics.UpdateAPIView, generics.DestroyAPIView):
         ],
         responses={
             status.HTTP_200_OK: CommentsSerializer,
-            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES,
+            **SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES,
             **SCHEMA_PERMISSION_DENIED,
         }
     )
@@ -175,7 +175,7 @@ class UpdateDestroyCommentView(generics.UpdateAPIView, generics.DestroyAPIView):
         ],
         responses={
             status.HTTP_200_OK: CommentsSerializer,
-            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES,
+            **SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES,
             **SCHEMA_PERMISSION_DENIED,
         }
     )
@@ -203,7 +203,7 @@ class UpdateDestroyCommentView(generics.UpdateAPIView, generics.DestroyAPIView):
         summary="Delete comment on the article",
         responses={
             **STATUS_204,
-            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES,
+            **SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES,
             **SCHEMA_PERMISSION_DENIED,
         }
     )

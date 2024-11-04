@@ -16,7 +16,8 @@ class ArticlesSerializer(serializers.ModelSerializer):
         model = Article
         fields = ["id", "title", "author", "create_date"]
 
-    def get_author(self, obj):
+    @staticmethod
+    def get_author(obj):
         author_fullname = None
         if obj.author:
             author_fullname = obj.author.full_name
@@ -31,13 +32,15 @@ class ArticleSerializer(serializers.ModelSerializer):
         model = Article
         fields = "__all__"
 
-    def get_author_fullname(self, obj):
+    @staticmethod
+    def get_author_fullname(obj):
         author_fullname = None
         if obj.author:
             author_fullname = obj.author.full_name
         return author_fullname
 
-    def get_is_updated(self, obj):
+    @staticmethod
+    def get_is_updated(obj):
         create_date = obj.create_date
         update_date = obj.update_date
         return create_date != update_date
@@ -52,18 +55,21 @@ class CommentsSerializer(serializers.ModelSerializer):
         model = Comment
         fields = "__all__"
 
-    def get_author(self, obj):
+    @staticmethod
+    def get_author(obj):
         author_fullname = None
         if obj.author:
             author_fullname = obj.author.full_name
         return author_fullname
 
-    def get_is_updated(self, obj):
+    @staticmethod
+    def get_is_updated(obj):
         create_date = obj.create_date
         update_date = obj.update_date
         return create_date != update_date
 
-    def get_child_comments(self, obj):
+    @staticmethod
+    def get_child_comments(obj):
         child_comments = Comment.objects.filter(parent_comment=obj.id)
         if child_comments:
             return CommentsSerializer(child_comments, many=True).data
@@ -77,7 +83,8 @@ class LikeOnCommentSerializer(serializers.ModelSerializer):
         model = LikeOnComment
         fields = ["id", "author", "reaction", "create_date"]
 
-    def get_author(self, obj):
+    @staticmethod
+    def get_author(obj):
         author_fullname = None
         if obj.author:
             author_fullname = obj.author.full_name

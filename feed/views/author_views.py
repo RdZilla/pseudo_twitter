@@ -3,7 +3,7 @@ from rest_framework import generics, status, permissions
 
 from feed.models import Author
 from feed.serializers import AuthorsSerializer
-from feed.statuses import GET_POST_SCHEMA_STATUSES, RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES, STATUS_204
+from feed.statuses import SCHEMA_GET_POST_STATUSES, SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES, STATUS_204
 
 
 class GetPostAuthorsView(generics.ListCreateAPIView):
@@ -16,7 +16,7 @@ class GetPostAuthorsView(generics.ListCreateAPIView):
         summary="Get list of authors",
         responses={
             status.HTTP_200_OK: AuthorsSerializer,
-            **GET_POST_SCHEMA_STATUSES
+            **SCHEMA_GET_POST_STATUSES
         }
     )
     def get(self, request, *args, **kwargs):
@@ -29,14 +29,14 @@ class GetPostAuthorsView(generics.ListCreateAPIView):
             OpenApiExample(
                 name='Example of an author create request',
                 value={
-                    "author_name": "Erich Maria Remarque",
+                    "full_name": "Erich Maria Remarque",
                 },
                 request_only=True
             ),
         ],
         responses={
             status.HTTP_201_CREATED: AuthorsSerializer,
-            **GET_POST_SCHEMA_STATUSES
+            **SCHEMA_GET_POST_STATUSES
         }
     )
     def post(self, request, *args, **kwargs):
@@ -53,7 +53,7 @@ class RetrieveUpdateDestroyAuthorView(generics.RetrieveUpdateDestroyAPIView):
         summary="Get author by id",
         responses={
             status.HTTP_200_OK: AuthorsSerializer,
-            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES
+            **SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES
         }
     )
     def get(self, request, *args, **kwargs):
@@ -66,14 +66,14 @@ class RetrieveUpdateDestroyAuthorView(generics.RetrieveUpdateDestroyAPIView):
             OpenApiExample(
                 name='Example of an author update request',
                 value={
-                    "author_name": "Erich Maria Remarque",
+                    "full_name": "Erich Maria Remarque",
                 },
                 request_only=True
             ),
         ],
         responses={
             status.HTTP_200_OK: AuthorsSerializer,
-            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES
+            **SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES
         }
     )
     def put(self, request, *args, **kwargs):
@@ -86,14 +86,14 @@ class RetrieveUpdateDestroyAuthorView(generics.RetrieveUpdateDestroyAPIView):
             OpenApiExample(
                 name='Example of an author partial update request',
                 value={
-                    "author_name": "Erich Maria Remarque",
+                    "full_name": "Erich Maria Remarque",
                 },
                 request_only=True
             ),
         ],
         responses={
             status.HTTP_200_OK: AuthorsSerializer,
-            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES
+            **SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES
         }
     )
     def patch(self, request, *args, **kwargs):
@@ -104,7 +104,7 @@ class RetrieveUpdateDestroyAuthorView(generics.RetrieveUpdateDestroyAPIView):
         summary="Delete author by id",
         responses={
             **STATUS_204,
-            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES
+            **SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES
         }
     )
     def delete(self, request, *args, **kwargs):

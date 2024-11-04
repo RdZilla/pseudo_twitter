@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from feed.models import Article, Author
 from feed.serializers import ArticlesSerializer, ArticleSerializer
-from feed.statuses import SCHEMA_PERMISSION_DENIED, GET_POST_SCHEMA_STATUSES, RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES, \
+from feed.statuses import SCHEMA_PERMISSION_DENIED, SCHEMA_GET_POST_STATUSES, SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES, \
     STATUS_204
 from feed.utils import validate_params
 
@@ -24,7 +24,7 @@ class GetArticlesView(generics.ListAPIView):
         summary="Get list of articles",
         responses={
             status.HTTP_200_OK: ArticlesSerializer,
-            **GET_POST_SCHEMA_STATUSES
+            **SCHEMA_GET_POST_STATUSES
 
         }
     )
@@ -51,7 +51,7 @@ class PostArticleView(generics.CreateAPIView):
         ],
         responses={
             status.HTTP_201_CREATED: ArticleSerializer,
-            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES
+            **SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES
         }
     )
     def post(self, request, *args, **kwargs):
@@ -98,7 +98,7 @@ class RetrieveUpdateDestroyArticleView(generics.RetrieveUpdateDestroyAPIView):
         summary="Get article",
         responses={
             status.HTTP_200_OK: ArticleSerializer,
-            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES,
+            **SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES,
             **SCHEMA_PERMISSION_DENIED
         }
     )
@@ -121,7 +121,7 @@ class RetrieveUpdateDestroyArticleView(generics.RetrieveUpdateDestroyAPIView):
         ],
         responses={
             status.HTTP_200_OK: ArticleSerializer,
-            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES,
+            **SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES,
             **SCHEMA_PERMISSION_DENIED
         }
     )
@@ -146,7 +146,7 @@ class RetrieveUpdateDestroyArticleView(generics.RetrieveUpdateDestroyAPIView):
         ],
         responses={
             status.HTTP_200_OK: ArticleSerializer,
-            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES,
+            **SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES,
             **SCHEMA_PERMISSION_DENIED
         }
     )
@@ -161,7 +161,7 @@ class RetrieveUpdateDestroyArticleView(generics.RetrieveUpdateDestroyAPIView):
         summary="Delete article",
         responses={
             **STATUS_204,
-            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES,
+            **SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES,
             **SCHEMA_PERMISSION_DENIED
         }
     )

@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from feed.models import LikeOnComment, Author, Comment
 from feed.serializers import LikeOnCommentSerializer
-from feed.statuses import SCHEMA_PERMISSION_DENIED, RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES, STATUS_204
+from feed.statuses import SCHEMA_PERMISSION_DENIED, SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES, STATUS_204
 from feed.utils import validate_params
 
 
@@ -32,7 +32,7 @@ class GetPostLikeOnComment(generics.ListCreateAPIView):
         summary="Get like on comment",
         responses={
             status.HTTP_200_OK: LikeOnCommentSerializer,
-            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES
+            **SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES
         }
     )
     def get(self, request, *args, **kwargs):
@@ -50,7 +50,7 @@ class GetPostLikeOnComment(generics.ListCreateAPIView):
         ],
         responses={
             status.HTTP_201_CREATED: status.HTTP_201_CREATED,
-            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES,
+            **SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES,
             **SCHEMA_PERMISSION_DENIED
         },
         tags=["Likes"],
@@ -115,7 +115,7 @@ class RetrieveUpdateDestroyLikeOnCommentView(generics.RetrieveUpdateDestroyAPIVi
     @extend_schema(
         responses={
             status.HTTP_200_OK: LikeOnCommentSerializer,
-            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES,
+            **SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES,
             **SCHEMA_PERMISSION_DENIED
         },
         tags=["Likes"],
@@ -136,7 +136,7 @@ class RetrieveUpdateDestroyLikeOnCommentView(generics.RetrieveUpdateDestroyAPIVi
         ],
         responses={
             status.HTTP_200_OK: LikeOnCommentSerializer,
-            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES,
+            **SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES,
             **SCHEMA_PERMISSION_DENIED
         },
         tags=["Likes"],
@@ -156,7 +156,7 @@ class RetrieveUpdateDestroyLikeOnCommentView(generics.RetrieveUpdateDestroyAPIVi
         ],
         responses={
             status.HTTP_200_OK: LikeOnCommentSerializer,
-            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES,
+            **SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES,
             **SCHEMA_PERMISSION_DENIED
         },
         tags=["Likes"],
@@ -168,7 +168,7 @@ class RetrieveUpdateDestroyLikeOnCommentView(generics.RetrieveUpdateDestroyAPIVi
     @extend_schema(
         responses={
             **STATUS_204,
-            **RETRIEVE_UPDATE_DESTROY_SCHEMA_STATUSES,
+            **SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES,
             **SCHEMA_PERMISSION_DENIED
         },
         tags=["Likes"],
