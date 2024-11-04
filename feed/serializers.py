@@ -3,6 +3,19 @@ from rest_framework import serializers
 from feed.models import Article, Author, Comment, LikeOnComment
 
 
+def getting_author_fullname(obj):
+    author_fullname = None
+    if obj.author:
+        author_fullname = obj.author.full_name
+    return author_fullname
+
+
+def create_is_updated_flag(obj):
+    create_date = obj.create_date
+    update_date = obj.update_date
+    return create_date != update_date
+
+
 class AuthorsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
@@ -10,18 +23,15 @@ class AuthorsSerializer(serializers.ModelSerializer):
 
 
 class ArticlesSerializer(serializers.ModelSerializer):
-    author = serializers.SerializerMethodField()
+    author_fullname = serializers.SerializerMethodField()
 
     class Meta:
         model = Article
-        fields = ["id", "title", "author", "create_date"]
+        fields = ["id", "title", "author_fullname", "create_date"]
 
     @staticmethod
-    def get_author(obj):
-        author_fullname = None
-        if obj.author:
-            author_fullname = obj.author.full_name
-        return author_fullname
+    def get_author_fullname(obj):
+        return getting_author_fullname(obj)
 
 
 class ArticleSerializer(serializers.ModelSerializer):
@@ -34,20 +44,15 @@ class ArticleSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_author_fullname(obj):
-        author_fullname = None
-        if obj.author:
-            author_fullname = obj.author.full_name
-        return author_fullname
+        return getting_author_fullname(obj)
 
     @staticmethod
     def get_is_updated(obj):
-        create_date = obj.create_date
-        update_date = obj.update_date
-        return create_date != update_date
+        return create_is_updated_flag(obj)
 
 
 class CommentsSerializer(serializers.ModelSerializer):
-    author = serializers.SerializerMethodField()
+    author_fullname = serializers.SerializerMethodField()
     is_updated = serializers.SerializerMethodField()
     child_comments = serializers.SerializerMethodField()
 
@@ -56,17 +61,12 @@ class CommentsSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     @staticmethod
-    def get_author(obj):
-        author_fullname = None
-        if obj.author:
-            author_fullname = obj.author.full_name
-        return author_fullname
+    def get_author_fullname(obj):
+        return getting_author_fullname(obj)
 
     @staticmethod
     def get_is_updated(obj):
-        create_date = obj.create_date
-        update_date = obj.update_date
-        return create_date != update_date
+        return create_is_updated_flag(obj)
 
     @staticmethod
     def get_child_comments(obj):
@@ -77,15 +77,12 @@ class CommentsSerializer(serializers.ModelSerializer):
 
 
 class LikeOnCommentSerializer(serializers.ModelSerializer):
-    author = serializers.SerializerMethodField()
+    author_fullname = serializers.SerializerMethodField()
 
     class Meta:
         model = LikeOnComment
-        fields = ["id", "author", "reaction", "create_date"]
+        fields = ["id", "author_fullname", "reaction", "create_date"]
 
     @staticmethod
-    def get_author(obj):
-        author_fullname = None
-        if obj.author:
-            author_fullname = obj.author.full_name
-        return author_fullname
+    def get_author_fullname(obj):
+        return getting_author_fullname(obj)
