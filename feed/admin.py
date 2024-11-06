@@ -12,8 +12,8 @@ class ArticleAdmin(admin.ModelAdmin):
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
-    list_display = ["id", "full_name", "registration_date"]
-    search_fields = ["full_name"]
+    list_display = ["id", "username", "full_name", "email", "registration_date"]
+    search_fields = ["username", "full_name", "email"]
 
 
 @admin.register(Comment)

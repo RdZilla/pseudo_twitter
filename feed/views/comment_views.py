@@ -3,9 +3,10 @@ from rest_framework import generics, status, permissions
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
-from feed.models import Comment, Author, Article
+from feed.models import Comment, Article, Author
 from feed.serializers import CommentsSerializer
-from feed.statuses import SCHEMA_PERMISSION_DENIED, SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES, STATUS_204
+from feed.statuses import SCHEMA_PERMISSION_DENIED, SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES, STATUS_204, \
+    RESPONSE_STATUS_403
 from feed.utils import validate_params
 
 
@@ -65,7 +66,6 @@ class GetPostCommentView(generics.ListCreateAPIView):
                 name="Example of an comment create request",
                 value={
                     "comment_text": "Some comment text",
-                    "author_id": 1,
                     "parent_comment_id": None
                 }
             ),
@@ -78,14 +78,15 @@ class GetPostCommentView(generics.ListCreateAPIView):
         }
     )
     def post(self, request, *args, **kwargs):
-        comment_text = request.data.get("comment_text")
-        author_id = request.data.get("author_id")
+        author_id = request.user.id
+
         article_id = kwargs.get("article_id")
+
+        comment_text = request.data.get("comment_text")
         parent_comment_id = request.data.get("parent_comment_id")
 
         dict_for_validate = {
             "comment_text": comment_text,
-            "author_id": author_id,
             "article_id": article_id
         }
         error = validate_params(dict_for_validate, "comment")
@@ -133,7 +134,6 @@ class UpdateDestroyCommentView(generics.UpdateAPIView, generics.DestroyAPIView):
                     "comment_text": "Some comment text",
                     "count_likes": 0,
                     "article": 1,
-                    "author": 1,
                     "parent_comment": None
                 }
             ),
@@ -145,7 +145,13 @@ class UpdateDestroyCommentView(generics.UpdateAPIView, generics.DestroyAPIView):
         }
     )
     def put(self, request, *args, **kwargs):
-        author_id = request.data.get("author")
+        author_id = request.user.id
+
+        pk = kwargs.get("pk")
+        comment = get_object_or_404(Comment, pk=pk)
+        if author_id != comment.author_id:
+            return RESPONSE_STATUS_403
+
         article_id = request.data.get("article")
         parent_comment_id = request.data.get("parent_comment")
 
@@ -167,8 +173,6 @@ class UpdateDestroyCommentView(generics.UpdateAPIView, generics.DestroyAPIView):
                 value={
                     "comment_text": "Some comment text",
                     "count_likes": 0,
-                    "article": 1,
-                    "author": 1,
                     "parent_comment": None
                 }
             ),
@@ -180,9 +184,12 @@ class UpdateDestroyCommentView(generics.UpdateAPIView, generics.DestroyAPIView):
         }
     )
     def patch(self, request, *args, **kwargs):
-        author_id = request.data.get("author")
-        if author_id:
-            get_object_or_404(Author, pk=author_id)
+        author_id = request.user.id
+
+        pk = kwargs.get("pk")
+        comment = get_object_or_404(Comment, pk=pk)
+        if author_id != comment.author_id:
+            return RESPONSE_STATUS_403
 
         article_id = request.data.get("article")
         if article_id:
@@ -208,4 +215,8 @@ class UpdateDestroyCommentView(generics.UpdateAPIView, generics.DestroyAPIView):
         }
     )
     def delete(self, request, *args, **kwargs):
+        pk = kwargs.get("pk")
+        comment = get_object_or_404(Comment, pk=pk)
+        if request.user.id != comment.author_id:
+            return RESPONSE_STATUS_403
         return super().delete(request, *args, **kwargs)
