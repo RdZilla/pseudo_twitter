@@ -32,7 +32,7 @@ class Article(models.Model):
 
 
 class Comment(models.Model):
-    comment_text = models.CharField(max_length=200, verbose_name="Текст комментария")
+    comment_text = models.CharField(max_length=100, verbose_name="Текст комментария")
     create_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания комментария")
     update_date = models.DateTimeField(auto_now=True, verbose_name="Дата обновления комментария")
     author = models.ForeignKey(Author, on_delete=models.CASCADE, verbose_name="Автор комментария")
