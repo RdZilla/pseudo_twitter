@@ -29,7 +29,8 @@ class GetPostAuthorsView(generics.ListCreateAPIView):
             OpenApiExample(
                 name='Example of an author create request',
                 value={
-                    "full_name": "Erich Maria Remarque",
+                    "first_name": "Erich Maria",
+                    "last_name": "Remarque",
                     "username": "username",
                     "password": "password",
                     "email": "email",
@@ -74,7 +75,8 @@ class RetrieveUpdateDestroyAuthorView(generics.RetrieveUpdateDestroyAPIView):
             OpenApiExample(
                 name='Example of an author update request',
                 value={
-                    "full_name": "Erich Maria Remarque",
+                    "first_name": "Erich Maria",
+                    "last_name": "Remarque"
                 },
                 request_only=True
             ),
@@ -94,7 +96,8 @@ class RetrieveUpdateDestroyAuthorView(generics.RetrieveUpdateDestroyAPIView):
             OpenApiExample(
                 name='Example of an author partial update request',
                 value={
-                    "full_name": "Erich Maria Remarque",
+                    "first_name": "Erich Maria",
+                    "last_name": "Remarque",
                 },
                 request_only=True
             ),

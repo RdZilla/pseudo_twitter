@@ -3,7 +3,9 @@ from django.db import models
 
 
 class Author(AbstractUser):
-    full_name = models.CharField(max_length=255, verbose_name="Полное имя автора")
+    first_name = models.CharField(max_length=150, verbose_name="Имя автора")
+    last_name = models.CharField(max_length=150, verbose_name="Фамилия автора")
+    full_name = models.CharField(max_length=255, verbose_name="Полное имя автора", blank=True)
     registration_date = models.DateField(auto_now_add=True, verbose_name="Дата регистрации")
 
     class Meta:
@@ -13,6 +15,12 @@ class Author(AbstractUser):
     def __str__(self):
         author_id = self.id
         return f"{author_id} {self.full_name}"
+
+    def save(self, *args, **kwargs):
+        first_name = self.first_name
+        last_name = self.last_name
+        self.full_name = f"{first_name} {last_name}"
+        super(Author, self).save(*args, **kwargs)
 
 
 class Article(models.Model):
