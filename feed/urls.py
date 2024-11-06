@@ -1,9 +1,9 @@
 from django.urls import path
 
 from .views.author_views import GetPostAuthorsView, RetrieveUpdateDestroyAuthorView
-from .views.article_views import GetArticlesView, PostArticleView, RetrieveUpdateDestroyArticleView
+from .views.article_views import GetPostArticlesView, RetrieveUpdateDestroyArticleView
 from .views.comment_views import GetPostCommentView, UpdateDestroyCommentView
-from .views.like_on_comment_views import GetPostLikeOnComment, RetrieveUpdateDestroyLikeOnCommentView
+from .views.like_on_comment_views import LikeOnCommentView
 
 urlpatterns = [
     # Authors
@@ -11,8 +11,7 @@ urlpatterns = [
     path("author/<str:pk>", RetrieveUpdateDestroyAuthorView.as_view(), name="retrieve_author"),
 
     # Articles
-    path("article", GetArticlesView.as_view(), name="list_articles"),
-    path("author/<str:author_id>/article", PostArticleView.as_view(), name="create_article"),
+    path("article", GetPostArticlesView.as_view(), name="list_articles"),
     path("article/<str:pk>", RetrieveUpdateDestroyArticleView.as_view(), name="retrieve_update_destroy_article"),
 
     # Comments
@@ -20,7 +19,5 @@ urlpatterns = [
     path("comments/<str:pk>", UpdateDestroyCommentView.as_view(), name="create_comment"),
 
     # Likes on Comments
-    path("comment/<str:comment_id>/like", GetPostLikeOnComment.as_view(), name="list_likes_create_like_on_comment"),
-    path("comment/<str:comment_id>/like/<str:author_id>", RetrieveUpdateDestroyLikeOnCommentView.as_view(),
-         name="delete_like_on_comment"),
+    path("comment/<str:comment_id>/like", LikeOnCommentView.as_view(), name="list_likes_create_like_on_comment"),
 ]

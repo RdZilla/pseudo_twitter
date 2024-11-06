@@ -1,5 +1,6 @@
 from drf_spectacular.utils import inline_serializer
 from rest_framework import serializers, status
+from rest_framework.response import Response
 
 # schemas permission denied for documentation
 SCHEMA_PERMISSION_DENIED = {
@@ -63,3 +64,6 @@ SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES = {
     **STATUS_404,
     **STATUS_500
 }
+
+RESPONSE_STATUS_403 = Response(data={"detail": "У вас недостаточно прав для выполнения данного действия."},
+                               status=status.HTTP_403_FORBIDDEN)

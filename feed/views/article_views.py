@@ -6,12 +6,13 @@ from rest_framework.response import Response
 from feed.models import Article, Author
 from feed.serializers import ArticlesSerializer, ArticleSerializer
 from feed.statuses import SCHEMA_PERMISSION_DENIED, SCHEMA_GET_POST_STATUSES, SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES, \
-    STATUS_204
+    STATUS_204, RESPONSE_STATUS_403
 from feed.utils import validate_params
 
 
-class GetArticlesView(generics.ListAPIView):
+class GetPostArticlesView(generics.ListAPIView):
     serializer_class = ArticlesSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         queryset = Article.objects.select_related(
@@ -31,11 +32,6 @@ class GetArticlesView(generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
-
-class PostArticleView(generics.CreateAPIView):
-    serializer_class = ArticleSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
     @extend_schema(
         tags=['Articles'],
         summary="Create new article",
@@ -51,17 +47,17 @@ class PostArticleView(generics.CreateAPIView):
         ],
         responses={
             status.HTTP_201_CREATED: ArticleSerializer,
-            **SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES
+            **SCHEMA_RETRIEVE_UPDATE_DESTROY_STATUSES,
+            **SCHEMA_PERMISSION_DENIED
         }
     )
     def post(self, request, *args, **kwargs):
-        author_id = kwargs.get("author_id")
+        author_id = request.user.id
 
         title = request.data.get("title")
         content = request.data.get("content")
 
         dict_for_validate = {
-            "author": author_id,
             "title": title,
             "content": content
         }
@@ -114,7 +110,6 @@ class RetrieveUpdateDestroyArticleView(generics.RetrieveUpdateDestroyAPIView):
                 value={
                     "title": "My first article",
                     "content": "This is my first article",
-                    "author": 1
                 },
                 request_only=True
             ),
@@ -126,7 +121,13 @@ class RetrieveUpdateDestroyArticleView(generics.RetrieveUpdateDestroyAPIView):
         }
     )
     def put(self, request, *args, **kwargs):
-        author_id = request.data.get("author")
+        author_id = request.user.id
+
+        pk = kwargs.get("pk")
+        article = get_object_or_404(Article, pk=pk)
+        if author_id != article.author_id:
+            return RESPONSE_STATUS_403
+
         get_object_or_404(Author, pk=author_id)
         return super().update(request, *args, **kwargs)
 
@@ -139,7 +140,6 @@ class RetrieveUpdateDestroyArticleView(generics.RetrieveUpdateDestroyAPIView):
                 value={
                     "title": "My first article",
                     "content": "This is my first article",
-                    "author": 1
                 },
                 request_only=True
             ),
@@ -151,9 +151,14 @@ class RetrieveUpdateDestroyArticleView(generics.RetrieveUpdateDestroyAPIView):
         }
     )
     def patch(self, request, *args, **kwargs):
-        author_id = request.data.get("author")
-        if author_id:
-            get_object_or_404(Author, pk=author_id)
+        author_id = request.user.id
+
+        pk = kwargs.get("pk")
+        article = get_object_or_404(Article, pk=pk)
+        if author_id != article.author_id:
+            return RESPONSE_STATUS_403
+
+        get_object_or_404(Author, pk=author_id)
         return super().partial_update(request, *args, **kwargs)
 
     @extend_schema(
@@ -166,4 +171,11 @@ class RetrieveUpdateDestroyArticleView(generics.RetrieveUpdateDestroyAPIView):
         }
     )
     def delete(self, request, *args, **kwargs):
+        author_id = request.user.id
+
+        pk = kwargs.get("pk")
+        article = get_object_or_404(Article, pk=pk)
+        if author_id != article.author_id:
+            return RESPONSE_STATUS_403
+
         return super().delete(request, *args, **kwargs)

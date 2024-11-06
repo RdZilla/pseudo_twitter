@@ -1,7 +1,8 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-class Author(models.Model):
+class Author(AbstractUser):
     full_name = models.CharField(max_length=255, verbose_name="Полное имя автора")
     registration_date = models.DateField(auto_now_add=True, verbose_name="Дата регистрации")
 
@@ -10,7 +11,8 @@ class Author(models.Model):
         verbose_name_plural = "Авторы"
 
     def __str__(self):
-        return self.full_name
+        author_id = self.id
+        return f"{author_id} {self.full_name}"
 
 
 class Article(models.Model):
@@ -25,7 +27,8 @@ class Article(models.Model):
         verbose_name_plural = "Записи"
 
     def __str__(self):
-        return self.title
+        article_id = self.id
+        return f"{article_id} {self.title}"
 
 
 class Comment(models.Model):
@@ -42,9 +45,10 @@ class Comment(models.Model):
         verbose_name_plural = "Комментарии"
 
     def __str__(self):
+        comment_id = self.id
         create_date = self.create_date.strftime("%d.%m.%Y")
         author_full_name = self.author.full_name
-        return f"Комментарий от {create_date} от {author_full_name}"
+        return f"{comment_id} Комментарий от {create_date} от {author_full_name}"
 
 
 class LikeOnComment(models.Model):
@@ -73,6 +77,7 @@ class LikeOnComment(models.Model):
         unique_together = ['author', 'comment']
 
     def __str__(self):
+        reaction_id = self.id
         reaction = self.reaction
         author_fullname = self.author.full_name
-        return f"{reaction} от {author_fullname}"
+        return f"{reaction_id} {reaction} от {author_fullname}"

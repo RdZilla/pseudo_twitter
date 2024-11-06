@@ -9,7 +9,7 @@ from feed.statuses import SCHEMA_GET_POST_STATUSES, SCHEMA_RETRIEVE_UPDATE_DESTR
 class GetPostAuthorsView(generics.ListCreateAPIView):
     queryset = Author.objects.all()
     serializer_class = AuthorsSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAdminUser]
 
     @extend_schema(
         tags=['Authors'],
@@ -30,6 +30,9 @@ class GetPostAuthorsView(generics.ListCreateAPIView):
                 name='Example of an author create request',
                 value={
                     "full_name": "Erich Maria Remarque",
+                    "username": "username",
+                    "password": "password",
+                    "email": "email",
                 },
                 request_only=True
             ),
@@ -42,11 +45,16 @@ class GetPostAuthorsView(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
 
+    def perform_create(self, serializer):
+        user = serializer.save()
+        user.set_password(user.password)
+        user.save()
+
 
 class RetrieveUpdateDestroyAuthorView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Author.objects.all()
     serializer_class = AuthorsSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser]
 
     @extend_schema(
         tags=['Authors'],
