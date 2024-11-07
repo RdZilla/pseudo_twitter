@@ -72,3 +72,5 @@
     ```shell
     python .\manage.py runserver
     ```
+8. Документация API
+   > Swagger доступен по адресу http://localhost:8000/swagger
